@@ -36,12 +36,14 @@ int init_spi() {
 
     UCA0CTL1 |= UCSWRST;                      // **Put state machine in reset**
     UCA0CTL1 |= UCSSEL__UCLK;
-    UCA0BR0 = 20 ; // fSCL = SMCLK/ value
-    UCA0BR1 = 0; //
+    //UCA0BR0 = 20 ; // fSCL = SMCLK/ value
+    //UCA0BR1 = 0; //
     //UCA0MCTL = 0; // No modulation
-    //UCCKPL
-    //UCMODE_2
-    UCA0CTL0 |= UCCKPH+UCSYNC+UCMSB;          // 3-pin, 8-bit SPI slave,
+    //UCB1CTL0 |= UCSYNC+                       // Synchronous mode enabled
+    //UCCKPL+                       // Clock Polarity High
+    //UCMODE_2+                     // 4-Pin SPI with UCxSTE active low
+    //UCMSB;                        // MSB first select. 
+    UCA0CTL0 |= UCCKPH+UCSYNC+UCMSB+UCMODE_2;          // 3-pin, 8-bit SPI slave,
                                               // Clock polarity high, MSB
     //UCA0CTL1 &= ~UCSWRST;                     // **Initialize USCI state machine**
 
@@ -55,11 +57,9 @@ int init_spi() {
     P4DIR &=~(BIT0 | BIT1 | BIT3 ); // input
 
     UCB1CTL1 |= UCSWRST;                      // **Put state machine in reset**
-    //UCB1CTL1 |= UCSSEL__UCLK; // SMCLK
+    UCB1CTL1 |= UCSSEL__UCLK; // SMCLK
     //UCB1BR0 = 20; // /2
     //UCB1BR1 = 0; //
-    //UCB1MCTL = 0; // No modulation
-
 //#define UCCKPH                 (0x80)         /* Sync. Mode: Clock Phase */
 //#define UCCKPL                 (0x40)         /* Sync. Mode: Clock Polarity */
 //#define UCMST                  (0x08)         /* Sync. Mode: Master Select */
